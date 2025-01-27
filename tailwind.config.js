@@ -18,6 +18,14 @@ module.exports = {
           light: 'rgb(var(--secondary-light) / <alpha-value>)',
           dark: 'rgb(var(--secondary-dark) / <alpha-value>)',
         },
+        bid: {
+          DEFAULT: 'rgb(var(--bid) / <alpha-value>)',
+          light: 'rgb(var(--bid-light) / <alpha-value>)',
+        },
+        ask: {
+          DEFAULT: 'rgb(var(--ask) / <alpha-value>)',
+          light: 'rgb(var(--ask-light) / <alpha-value>)',
+        },
         accent: {
           DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
           light: 'rgb(var(--accent-light) / <alpha-value>)',

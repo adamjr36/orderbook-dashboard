@@ -1,6 +1,7 @@
 'use client';
 
 import useOrderBookStore from '@/lib/store/useOrderBookStore';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function CumulativeGraph() {
   const orderBook = useOrderBookStore(state => state.orderBook);
@@ -26,8 +27,9 @@ export default function CumulativeGraph() {
   bidLevels.reverse().forEach(level => {
     runningBidSize += level.totalSize;
     cumulativeBids.push({
-      price: level.price,
-      size: runningBidSize
+      price: level.price.toFixed(2),
+      bidSize: runningBidSize,
+      askSize: 0
     });
   });
   cumulativeBids.reverse();
@@ -36,51 +38,73 @@ export default function CumulativeGraph() {
   askLevels.forEach(level => {
     runningAskSize += level.totalSize;
     cumulativeAsks.push({
-      price: level.price,
-      size: runningAskSize
+      price: level.price.toFixed(2),
+      bidSize: 0,
+      askSize: runningAskSize
     });
   });
 
-  const maxSize = Math.max(
-    cumulativeBids[0]?.size || 0,
-    cumulativeAsks[cumulativeAsks.length - 1]?.size || 0
-  );
+  // Combine data for the chart
+  const chartData = [...cumulativeBids, ...cumulativeAsks];
 
   return (
     <div className="h-full flex flex-col">
-      <h2 className="text-xl font-semibold mb-4">Cumulative Size Distribution</h2>
-      <div className="flex-1 flex items-end gap-1">
-        {/* Cumulative Bids */}
-        {cumulativeBids.map((level) => (
-          <div
-            key={level.price}
-            className="flex-1 flex flex-col items-center justify-end"
-          >
-            <div
-              className="w-full bg-green-100 hover:bg-green-200 transition-colors"
-              style={{ height: `${(level.size / maxSize) * 100}%` }}
+      <div className="mb-2 flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-blue-800">Cumulative Size Distribution</h2>
+        <div className="flex gap-4 text-sm">
+        </div>
+      </div>
+      <div className="flex-1 bg-white/5 backdrop-blur-sm rounded-lg p-2">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 5, right: 30, left: 10, bottom: 25 }}>
+            <XAxis
+              dataKey="price"
+              angle={-45}
+              textAnchor="end"
+              tick={{ fill: '#1e40af', fontSize: 12 }}
+              label={{ value: 'Price Level', position: 'bottom', offset: 10, fill: '#1e40af' }}
             />
-            <span className="text-xs text-gray-600 mt-1 rotate-45 origin-left">
-              {level.price.toFixed(2)}
-            </span>
-          </div>
-        ))}
-
-        {/* Cumulative Asks */}
-        {cumulativeAsks.map((level) => (
-          <div
-            key={level.price}
-            className="flex-1 flex flex-col items-center justify-end"
-          >
-            <div
-              className="w-full bg-red-100 hover:bg-red-200 transition-colors"
-              style={{ height: `${(level.size / maxSize) * 100}%` }}
+            <YAxis 
+              tick={{ fill: '#1e40af', fontSize: 12 }}
+              label={{ value: 'Size', angle: -90, position: 'insideLeft', fill: '#1e40af', style: { textAnchor: 'middle' } }}              
             />
-            <span className="text-xs text-gray-600 mt-1 rotate-45 origin-left">
-              {level.price.toFixed(2)}
-            </span>
-          </div>
-        ))}
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(30, 64, 175, 0.1)',
+                borderRadius: '0.75rem',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                padding: '0.75rem'
+              }}
+              formatter={(value, name) => {
+                if (value === 0) return [];
+                return [value.toLocaleString(), name === 'Bid Size' ? 'Cumulative Bids' : 'Cumulative Asks'];
+              }}
+              labelStyle={{
+                color: '#1e40af',
+                fontWeight: '600',
+                marginBottom: '0.25rem'
+              }}
+            />
+            <Bar
+              dataKey="bidSize"
+              stackId="stack"
+              fill="rgb(var(--bid-light))"
+              stroke="rgb(var(--bid))"
+              strokeWidth={1}
+              name="Bid Size"
+            />
+            <Bar
+              dataKey="askSize"
+              stackId="stack"
+              fill="rgb(var(--ask-light))"
+              stroke="rgb(var(--ask))"
+              strokeWidth={1}
+              name="Ask Size"
+            />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
