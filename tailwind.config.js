@@ -8,8 +8,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        primary: {
+          DEFAULT: 'rgb(var(--primary) / <alpha-value>)',
+          light: 'rgb(var(--primary-light) / <alpha-value>)',
+          dark: 'rgb(var(--primary-dark) / <alpha-value>)',
+        },
+        secondary: {
+          DEFAULT: 'rgb(var(--secondary) / <alpha-value>)',
+          light: 'rgb(var(--secondary-light) / <alpha-value>)',
+          dark: 'rgb(var(--secondary-dark) / <alpha-value>)',
+        },
+        accent: {
+          DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+          light: 'rgb(var(--accent-light) / <alpha-value>)',
+          dark: 'rgb(var(--accent-dark) / <alpha-value>)',
+        },
+        background: 'rgb(var(--background) / <alpha-value>)',
+        foreground: 'rgb(var(--foreground) / <alpha-value>)',
       },
     },
   },

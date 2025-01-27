@@ -36,11 +36,11 @@ export default function OBConfigButton({ type, title, description, icon }) {
   return (
     <button 
       onClick={handleClick}
-      className="flex flex-col items-center justify-center p-8 glass-effect border-2 border-primary/20 rounded-xl hover:border-primary-light elevated transition-all group"
+      className="flex flex-col items-center justify-center p-8 bg-primary hover:bg-primary-dark backdrop-blur-sm border-2 border-primary-light/90 rounded-xl hover:border-primary-light elevated transition-all duration-300 group shadow-lg hover:shadow-primary/20"
     >
-      <Image src={icon} alt={title} width={48} height={48} className="mb-4 opacity-80 group-hover:opacity-100" />
-      <h2 className="text-xl font-semibold mb-2 text-primary-dark">{title}</h2>
-      <p className="text-gray-600 text-center text-sm">{description}</p>
+      <Image src={icon} alt={title} width={48} height={48} className="mb-4 brightness-[2] group-hover:brightness-[2.2] transition-all duration-300" />
+      <h2 className="text-lg font-semibold mb-2 text-white/90 group-hover:text-white/50">{title}</h2>
+      <p className="text-white/90 text-center text-sm group-hover:text-white">{description}</p>
     </button>
   );
 }

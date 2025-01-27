@@ -3,16 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --background: #f0f7ff;
-  --foreground: #1a365d;
-  --primary: #3b82f6;
-  --primary-light: #60a5fa;
-  --primary-dark: #1d4ed8;
+  --background: 240 247 255;
+  --foreground: 26 54 93;
+  --primary: 59 130 246;
+  --primary-light: 96 165 250;
+  --primary-dark: 29 78 216;
+  --secondary: 139 92 246;
+  --secondary-light: 167 139 250;
+  --secondary-dark: 109 40 217;
+  --accent: 244 114 182;
+  --accent-light: 251 207 232;
+  --accent-dark: 219 39 119;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: rgb(var(--foreground));
+  background: rgb(var(--background));
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -31,5 +37,5 @@ body {
 .elevated:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border-color: var(--primary);
+  border-color: rgb(var(--primary));
 }
