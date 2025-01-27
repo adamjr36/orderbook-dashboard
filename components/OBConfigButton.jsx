@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import useOrderBookStore from '@/lib/store/useOrderBookStore';
-import OrderBook from '@/lib/OrderBook';
+import OrderBook from '@/lib/orderbook/OrderBook';
 
-import { processCSVFile } from "@/lib/csvProcessor";
+import { processCSVFile } from "@/lib/utils/csvProcessor";
 import { readAndProcessCSV } from '@/lib/actions';
 
 export default function OBConfigButton({ type, title, description, icon }) {

@@ -1,6 +1,6 @@
-import VerticalOB from '@/components/VerticalOB';
-import PriceLevelGraph from '@/components/PriceLevelGraph';
-import CumulativeGraph from '@/components/CumulativeGraph';
+import VerticalOB from '@/components/orderbook/VerticalOB';
+import PriceLevelGraph from '@/components/orderbook/PriceLevelGraph';
+import CumulativeGraph from '@/components/orderbook/CumulativeGraph';
 
 export default function Dashboard() {
   return (
