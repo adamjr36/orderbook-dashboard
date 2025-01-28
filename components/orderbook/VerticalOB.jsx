@@ -49,15 +49,17 @@ export default function VerticalOB() {
       </div>
       
       {/* Ask Levels */}
-      <div className="flex-1 flex flex-col justify-end space-y-0.5 mb-3 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
-        {askLevels.map((level) => (
-          <PriceLevel
-            key={level.price}
-            level={level}
-            side="ask"
-            maxSize={maxAskSize}
-          />
-        ))}
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent flex flex-col-reverse">
+        <div className="space-y-0.5">
+          {askLevels.map((level) => (
+            <PriceLevel
+              key={level.price}
+              level={level}
+              side="ask"
+              maxSize={maxAskSize}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Spread */}
@@ -67,15 +69,17 @@ export default function VerticalOB() {
       </div>
 
       {/* Bid Levels */}
-      <div className="flex-1 flex flex-col space-y-0.5 mt-3 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
-        {bidLevels.map((level) => (
-          <PriceLevel
-            key={level.price}
-            level={level}
-            side="bid"
-            maxSize={maxBidSize}
-          />
-        ))}
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
+        <div className="flex flex-col space-y-0.5 mt-3">
+          {bidLevels.map((level) => (
+            <PriceLevel
+              key={level.price}
+              level={level}
+              side="bid"
+              maxSize={maxBidSize}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

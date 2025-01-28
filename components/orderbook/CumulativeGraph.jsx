@@ -1,7 +1,8 @@
 'use client';
 
 import useOrderBookStore from '@/lib/store/useOrderBookStore';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Bar } from 'recharts';
+import BaseOrderBookChart from './BaseOrderBookChart';
 
 export default function CumulativeGraph() {
   const orderBook = useOrderBookStore(state => state.orderBook);
@@ -24,7 +25,7 @@ export default function CumulativeGraph() {
   let runningAskSize = 0;
 
   // Calculate cumulative bids (from highest to lowest price)
-  bidLevels.reverse().forEach(level => {
+  bidLevels.forEach(level => {
     runningBidSize += level.totalSize;
     cumulativeBids.push({
       price: level.price.toFixed(2),
@@ -45,67 +46,69 @@ export default function CumulativeGraph() {
   });
 
   // Combine data for the chart
-  const chartData = [...cumulativeBids, ...cumulativeAsks];
+  let chartData = [...cumulativeBids, ...cumulativeAsks];
+
+  // Calculate spread price and standard deviation
+  let spreadPrice = null;
+  let minPrice = null;
+  let maxPrice = null;
+
+  if (askLevels.length > 0 && bidLevels.length > 0) {
+    spreadPrice = ((askLevels[0].price + bidLevels[0].price) / 2).toFixed(2);
+    
+    // Get all price levels
+    const allPrices = [...bidLevels, ...askLevels].map(level => level.price);
+    
+    // Calculate mean
+    const mean = allPrices.reduce((sum, price) => sum + price, 0) / allPrices.length;
+    
+    // Calculate standard deviation
+    const variance = allPrices.reduce((sum, price) => sum + Math.pow(price - mean, 2), 0) / allPrices.length;
+    const stdDev = Math.sqrt(variance);
+    
+    // Set domain to spread ± 1.5 standard deviations
+    minPrice = parseFloat(spreadPrice) - (1.75 * stdDev);
+    maxPrice = parseFloat(spreadPrice) + (1.75 * stdDev);
+
+    chartData = chartData.filter(level => {
+      return parseFloat(level.price) > minPrice && parseFloat(level.price) < maxPrice;
+    });
+
+    minPrice = chartData[0].price - (0.2 * stdDev);
+    maxPrice = chartData[chartData.length - 1].price + (0.2 * stdDev);
+  }
+
+  const tooltipFormatter = (value, name) => {
+    if (value === 0) return [];
+    return [value.toLocaleString(), name === 'Bid Size' ? 'Cumulative Bids' : 'Cumulative Asks'];
+  };
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="mb-2 flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-blue-800">Cumulative Size Distribution</h2>
-        <div className="flex gap-4 text-sm">
-        </div>
-      </div>
-      <div className="flex-1 bg-white/5 backdrop-blur-sm rounded-lg p-2">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 5, right: 30, left: 10, bottom: 25 }}>
-            <XAxis
-              dataKey="price"
-              angle={-45}
-              textAnchor="end"
-              tick={{ fill: '#1e40af', fontSize: 12 }}
-              label={{ value: 'Price Level', position: 'bottom', offset: 10, fill: '#1e40af' }}
-            />
-            <YAxis 
-              tick={{ fill: '#1e40af', fontSize: 12 }}
-              label={{ value: 'Size', angle: -90, position: 'insideLeft', fill: '#1e40af', style: { textAnchor: 'middle' } }}              
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(30, 64, 175, 0.1)',
-                borderRadius: '0.75rem',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                padding: '0.75rem'
-              }}
-              formatter={(value, name) => {
-                if (value === 0) return [];
-                return [value.toLocaleString(), name === 'Bid Size' ? 'Cumulative Bids' : 'Cumulative Asks'];
-              }}
-              labelStyle={{
-                color: '#1e40af',
-                fontWeight: '600',
-                marginBottom: '0.25rem'
-              }}
-            />
-            <Bar
-              dataKey="bidSize"
-              stackId="stack"
-              fill="rgb(var(--bid-light))"
-              stroke="rgb(var(--bid))"
-              strokeWidth={1}
-              name="Bid Size"
-            />
-            <Bar
-              dataKey="askSize"
-              stackId="stack"
-              fill="rgb(var(--ask-light))"
-              stroke="rgb(var(--ask))"
-              strokeWidth={1}
-              name="Ask Size"
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
+    <BaseOrderBookChart
+      title="Cumulative Size Distribution"
+      chartData={chartData}
+      spreadPrice={spreadPrice}
+      minPrice={minPrice}
+      maxPrice={maxPrice}
+      yAxisLabel="Size"
+      tooltipFormatter={tooltipFormatter}
+    >
+      <Bar
+        dataKey="bidSize"
+        stackId="stack"
+        fill="rgb(var(--bid-light))"
+        stroke="rgb(var(--bid))"
+        strokeWidth={1}
+        name="Bid Size"
+      />
+      <Bar
+        dataKey="askSize"
+        stackId="stack"
+        fill="rgb(var(--ask-light))"
+        stroke="rgb(var(--ask))"
+        strokeWidth={1}
+        name="Ask Size"
+      />
+    </BaseOrderBookChart>
   );
 }
