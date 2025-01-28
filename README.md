@@ -1,6 +1,6 @@
 # Orderbook Visualization tool
 
-Exactly what it sounds like.
+Exactly what it sounds like. Available at orderbook.adamjackrubinstein.com !
 
 ## Issues / Future improvements
 1. Add a way to save the orderbook to a file to reupload later
