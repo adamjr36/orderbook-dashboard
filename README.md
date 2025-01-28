@@ -1,6 +1,6 @@
 # Orderbook Visualization tool
 
-Exactly what it sounds like. Available at [orderbook.adamjackrubinstein.com](orderbook.adamjackrubinstein.com) !
+Exactly what it sounds like. Available at [orderbook.adamjackrubinstein.com](orderbook.adamjackrubinstein.com) ! Created supafast with Trae.
 
 ## Issues / Future improvements
 1. Graphs don't look great when there are only a couple orders
