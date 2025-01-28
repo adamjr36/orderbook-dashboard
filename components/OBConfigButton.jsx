@@ -6,9 +6,8 @@ import useOrderBookStore from '@/lib/store/useOrderBookStore';
 import OrderBook from '@/lib/orderbook/OrderBook';
 
 import { processCSVFile } from "@/lib/utils/csvProcessor";
-import { readAndProcessCSV } from '@/lib/actions';
 import { parse } from 'csv-parse/sync';
-
+import { sample } from "@/data/sample";
 
 export default function OBConfigButton({ type, title, description, icon }) {
   const router = useRouter();
@@ -55,7 +54,7 @@ export default function OBConfigButton({ type, title, description, icon }) {
           }
           break;
         case 'example':
-          const records = await readAndProcessCSV('sample.csv');
+          const records = sample;
           orderBook = processCSVFile(records);
           break;
         default:
